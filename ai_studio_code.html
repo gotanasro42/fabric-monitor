@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Fabric Monitor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-5">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-2">Monitor Cien Látok (1m + doprava)</h1>
+        <p id="update-time" class="mb-5 text-gray-600"></p>
+        
+        <div class="overflow-x-auto bg-white rounded-lg shadow">
+            <table class="w-full text-left">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="p-3">E-shop</th>
+                        <th class="p-3">Kategória</th>
+                        <th class="p-3">Produkt</th>
+                        <th class="p-3">Cena 1m</th>
+                        <th class="p-3">S dopravou</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dáta sa načítajú sem -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('update-time').innerText = "Posledná aktualizácia: " + data.last_update;
+                const tbody = document.getElementById('table-body');
+                data.products.forEach(p => {
+                    const row = `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3 font-bold text-blue-600">${p.source}</td>
+                            <td class="p-3 text-sm text-gray-500">${p.category}</td>
+                            <td class="p-3">${p.name}</td>
+                            <td class="p-3 font-mono">${p.price_1m.toFixed(2)} €</td>
+                            <td class="p-3 font-bold text-green-600">${p.total_with_shipping.toFixed(2)} €</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            });
+    </script>
+</body>
+</html>
